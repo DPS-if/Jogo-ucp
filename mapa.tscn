@@ -7,9 +7,39 @@
 albedo_texture = ExtResource("1_70f7c")
 albedo_texture_force_srgb = true
 
+[sub_resource type="Environment" id="Environment_70f7c"]
+background_mode = 2
+background_energy_multiplier = 0.0
+fog_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
+fog_light_energy = 0.53
+fog_sun_scatter = 0.13
+fog_density = 0.1959
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.195
+volumetric_fog_gi_inject = 0.0
+
+[sub_resource type="FogMaterial" id="FogMaterial_q8ihy"]
+density = -0.0786
+edge_fade = 0.068302
+
 [node name="Mapa" type="Node3D" unique_id=1149309742]
 
 [node name="Mapa" type="MeshInstance3D" parent="." unique_id=1781951636]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0037061214, 0.070765376, 2.2070422)
 material_override = SubResource("StandardMaterial3D_lrjei")
 mesh = ExtResource("2_q8ihy")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1810522295]
+transform = Transform3D(1, 0, 0, 0, 0.9969433, 0.07812851, 0, -0.07812851, 0.9969433, 0, 0.8435357, 1.020581)
+light_color = Color(0.77254903, 1, 1, 1)
+light_energy = 0.5
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=599128755]
+environment = SubResource("Environment_70f7c")
+
+[node name="FogVolume" type="FogVolume" parent="." unique_id=1029081683]
+material = SubResource("FogMaterial_q8ihy")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=235887504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28243363, 0.22654212, 0)
