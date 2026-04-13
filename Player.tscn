@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://djhutklqxh3fy"]
+
+[ext_resource type="ArrayMesh" uid="uid://dv15h7tamj8dq" path="res://Modelos/untitled.obj" id="1_xhfnw"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kpjcp"]
+height = 1.2084961
+
+[node name="Node3D" type="Node3D" unique_id=938624981]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1281391517]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=488572163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5341977, 0)
+shape = SubResource("CapsuleShape3D_kpjcp")
+
+[node name="Untitled" type="MeshInstance3D" parent="." unique_id=750740465]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.014324963, 0.552764, 0)
+mesh = ExtResource("1_xhfnw")
