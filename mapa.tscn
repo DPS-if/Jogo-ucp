@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://nxg077q4al0"]
+
+[ext_resource type="Texture2D" uid="uid://lctnqo1debyr" path="res://assets/paleta.png" id="1_70f7c"]
+[ext_resource type="ArrayMesh" uid="uid://bt8lced5crhnl" path="res://Modelos/mapa.obj" id="2_q8ihy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lrjei"]
+albedo_texture = ExtResource("1_70f7c")
+albedo_texture_force_srgb = true
+
+[node name="Mapa" type="Node3D" unique_id=1149309742]
+
+[node name="Mapa" type="MeshInstance3D" parent="." unique_id=1781951636]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0037061214, 0.070765376, 2.2070422)
+material_override = SubResource("StandardMaterial3D_lrjei")
+mesh = ExtResource("2_q8ihy")

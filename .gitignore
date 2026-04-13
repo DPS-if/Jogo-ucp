@@ -1,0 +1,33 @@
+# --- Godot Específico ---
+.godot/
+.import/
+export/
+executable/
+
+# --- Específicos de Sistema (Essencial para sua equipe) ---
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.fuse_hidden*
+.trash/
+.nfs*
+
+# macOS (mesmo que ninguém use agora, evita sujeira se alguém entrar no futuro)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# --- Mono/C# (Se usarem a versão .NET) ---
+.mono/
+bin/
+obj/
+*.sln
+*.csproj
+
+# --- Editor e Logs ---
+*.log
+.godot/editor/
