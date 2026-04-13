@@ -10,23 +10,25 @@ albedo_texture_force_srgb = true
 [sub_resource type="Environment" id="Environment_70f7c"]
 background_mode = 2
 background_energy_multiplier = 0.0
+ambient_light_source = 3
+ambient_light_energy = 1.1
 fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
 fog_light_energy = 0.53
 fog_sun_scatter = 0.13
-fog_density = 0.1959
+fog_density = 0.0331
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.195
+volumetric_fog_density = 0.0
 volumetric_fog_gi_inject = 0.0
 
 [sub_resource type="FogMaterial" id="FogMaterial_q8ihy"]
-density = -0.0786
+density = -3.3145
 edge_fade = 0.068302
 
 [node name="Mapa" type="Node3D" unique_id=1149309742]
 
 [node name="Mapa" type="MeshInstance3D" parent="." unique_id=1781951636]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0037061214, 0.070765376, 2.2070422)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.0037061214, 0.3519982, 23.291206)
 material_override = SubResource("StandardMaterial3D_lrjei")
 mesh = ExtResource("2_q8ihy")
 
@@ -39,7 +41,9 @@ light_energy = 0.5
 environment = SubResource("Environment_70f7c")
 
 [node name="FogVolume" type="FogVolume" parent="." unique_id=1029081683]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.050762177, 3.6235352, 1.1835938)
+size = Vector3(20.045753, 9.24707, 19.88086)
 material = SubResource("FogMaterial_q8ihy")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=235887504]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28243363, 0.22654212, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1927985, 0.18024802, -0.5816998)
