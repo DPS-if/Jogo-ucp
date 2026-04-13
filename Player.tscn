@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://djhutklqxh3fy"]
 
+[ext_resource type="Script" uid="uid://c43mveix8pctg" path="res://CharacterBody3d.cs" id="1_kpjcp"]
 [ext_resource type="ArrayMesh" uid="uid://dv15h7tamj8dq" path="res://Modelos/untitled.obj" id="1_xhfnw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kpjcp"]
@@ -8,6 +9,8 @@ height = 1.2084961
 [node name="Node3D" type="Node3D" unique_id=938624981]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1281391517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.9604645e-08, 0)
+script = ExtResource("1_kpjcp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=488572163]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5341977, 0)
