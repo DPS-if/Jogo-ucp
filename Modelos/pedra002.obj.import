@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://xndk37o3e0iq"
+path="res://.godot/imported/pedra002.obj-cf034165bd227765ab7aea1f55f03b26.mesh"
+
+[deps]
+
+files=["res://.godot/imported/pedra002.obj-cf034165bd227765ab7aea1f55f03b26.mesh"]
+
+source_file="res://Modelos/pedra002.obj"
+dest_files=["res://.godot/imported/pedra002.obj-cf034165bd227765ab7aea1f55f03b26.mesh", "res://.godot/imported/pedra002.obj-cf034165bd227765ab7aea1f55f03b26.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -18,6 +18,19 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 project/assembly_name="jogo ucp"
 
+[importer_defaults]
+
+wavefront_obj={
+"force_disable_mesh_compression": false,
+"generate_lightmap_uv2": false,
+"generate_lightmap_uv2_texel_size": 0.2,
+"generate_lods": true,
+"generate_shadow_mesh": true,
+"generate_tangents": true,
+"offset_mesh": Vector3(0, 0, 0),
+"scale_mesh": Vector3(1, 1, 1)
+}
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
