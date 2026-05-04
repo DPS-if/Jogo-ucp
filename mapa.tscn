@@ -336,7 +336,7 @@ shape = SubResource("ConcavePolygonShape3D_o68h1")
 transform = Transform3D(-0.8155455, 0, 1.8261669, 0, 2, 0, -1.8261669, 0, -0.8155455, -7.1731396, 1.1313674, -9.295654)
 
 [node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D" unique_id=90393763]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.1708436, 0.22472382, -0.8804785)
 material_override = SubResource("StandardMaterial3D_6fw57")
 mesh = ExtResource("5_auc41")
 
@@ -349,7 +349,7 @@ shape = SubResource("ConcavePolygonShape3D_00yci")
 transform = Transform3D(2.0693605, 0, -3.4231195, 0, 4, 0, 3.4231195, 0, 2.0693605, 3.3205757, -1.1253798, -10.602512)
 
 [node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D2" unique_id=1365834640]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.170843, 0.048918247, -0.8804786)
 material_override = SubResource("StandardMaterial3D_6fw57")
 mesh = ExtResource("5_auc41")
 
@@ -362,11 +362,63 @@ shape = SubResource("ConcavePolygonShape3D_00yci")
 transform = Transform3D(2.5049298, 0.14568596, 1.6444156, 0.15461548, -2.9958642, 0.029891733, 1.6436003, 0.05979181, -2.5089848, -11.167805, 0.018350363, -2.7384033)
 
 [node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D3" unique_id=134141475]
-transform = Transform3D(0.9574176, -0.28661087, -0.034725428, 0.2879396, 0.9391783, 0.18717572, -0.021033227, -0.18920413, 0.98171246, 0.17084312, -0.30010176, -0.8804786)
+transform = Transform3D(0.9574177, -0.28661087, -0.034725428, 0.28793958, 0.9391782, 0.18717572, -0.021033227, -0.18920413, 0.98171246, 0.19850278, -0.8360391, -0.87513137)
 material_override = SubResource("StandardMaterial3D_6fw57")
 mesh = ExtResource("5_auc41")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Barreira/StaticBody3D3" unique_id=789350016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+visible = false
+shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="StaticBody3D4" type="StaticBody3D" parent="Barreira" unique_id=1171772006]
+transform = Transform3D(4.434447, -0.009830129, 2.3098881, -0.014875559, 4.9997296, 0.049834825, -2.3098614, -0.051070154, 4.434178, -13.155965, -1.8451959, 14.280948)
+
+[node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D4" unique_id=541415491]
+transform = Transform3D(-0.7047989, 0.10821026, 0.7011064, -0.36517882, -0.90263975, -0.22778666, 0.60819775, -0.41657263, 0.6756958, 0.64804983, 0.45925486, 0.25835848)
+material_override = SubResource("StandardMaterial3D_6fw57")
+mesh = ExtResource("5_auc41")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barreira/StaticBody3D4" unique_id=302777347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+visible = false
+shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="StaticBody3D5" type="StaticBody3D" parent="Barreira" unique_id=1119303075]
+transform = Transform3D(-3.8141534, 0, -1.2050867, 0, 4, 0, 1.2050867, 0, -3.8141534, -13.311427, 0.14126897, 7.9441996)
+
+[node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D5" unique_id=1010240427]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.1708436, 0.22472382, -0.8804785)
+material_override = SubResource("StandardMaterial3D_6fw57")
+mesh = ExtResource("5_auc41")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barreira/StaticBody3D5" unique_id=764351761]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+visible = false
+shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="StaticBody3D6" type="StaticBody3D" parent="Barreira" unique_id=863212254]
+transform = Transform3D(3.4199858, -1.715993, 1.1657904, 1.6242211, 3.6132214, 0.5536577, -1.2905829, 0, 3.7860794, 12.822443, -0.8320012, -1.8467941)
+
+[node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D6" unique_id=1872975433]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.1708436, 0.22472382, -0.8804785)
+material_override = SubResource("StandardMaterial3D_6fw57")
+mesh = ExtResource("5_auc41")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barreira/StaticBody3D6" unique_id=781981662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
+visible = false
+shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="StaticBody3D7" type="StaticBody3D" parent="Barreira" unique_id=334694843]
+transform = Transform3D(-3.944356, 0, 0.6648725, 0, 4, 0, -0.6648725, 0, -3.944356, 9.411019, -1.1584833, 9.975468)
+
+[node name="Pedra004" type="MeshInstance3D" parent="Barreira/StaticBody3D7" unique_id=1852496120]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0.1708436, 0.22472382, -0.8804785)
+material_override = SubResource("StandardMaterial3D_6fw57")
+mesh = ExtResource("5_auc41")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Barreira/StaticBody3D7" unique_id=1325553394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
 visible = false
 shape = SubResource("ConcavePolygonShape3D_00yci")
