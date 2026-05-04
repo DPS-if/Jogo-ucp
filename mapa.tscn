@@ -5,6 +5,7 @@
 [ext_resource type="ArrayMesh" uid="uid://b83inurd804ml" path="res://Modelos/Arvore 001.obj" id="3_5d3jg"]
 [ext_resource type="ArrayMesh" uid="uid://c0ktke6xr2tp2" path="res://Modelos/pedra001.obj" id="4_wan0n"]
 [ext_resource type="ArrayMesh" uid="uid://bufky4rf61kr" path="res://Modelos/pedra004.obj" id="5_auc41"]
+[ext_resource type="PackedScene" uid="uid://dj1klq2q3gbv4" path="res://player.tscn" id="6_wan0n"]
 
 [sub_resource type="Environment" id="Environment_70f7c"]
 background_mode = 2
@@ -63,9 +64,6 @@ environment = SubResource("Environment_70f7c")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.050762177, 3.6235352, 1.1835938)
 size = Vector3(20.045753, 9.24707, 19.88086)
 material = SubResource("FogMaterial_q8ihy")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=235887504]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1927985, 0.18024802, -0.5816998)
 
 [node name="Mapa2" type="StaticBody3D" parent="." unique_id=1734207306]
 
@@ -370,3 +368,6 @@ mesh = ExtResource("5_auc41")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
 visible = false
 shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="Player" parent="." unique_id=1319423774 instance=ExtResource("6_wan0n")]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, -6.2805676, 0.690899, 4.2538066)
