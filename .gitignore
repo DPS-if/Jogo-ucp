@@ -31,3 +31,6 @@ obj/
 # --- Editor e Logs ---
 *.log
 .godot/editor/
+
+# --- ARQUIVOS DO PROJETO (Ignorar Mapas/Cenas Específicas) ---
+mapa.tscn
