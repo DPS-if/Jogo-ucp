@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="jogo ucp"
-run/main_scene="uid://nxg077q4al0"
-config/features=PackedStringArray("4.6", "Forward Plus")
+run/main_scene="uid://b1gf8tph6sp17"
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 
 [dotnet]
 
