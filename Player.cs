@@ -3,19 +3,18 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	[Export] public float WalkSpeed = 0.8f;
-	[Export] public float SprintSpeed = 1.7f;
+	[Export] public float WalkSpeed = 5.0f;
+	[Export] public float SprintSpeed = 8.0f;
 	[Export] public float MouseSensitivity = 0.002f;
 
 	private Node3D _head;
 	private Camera3D _camera;
 	private float _currentSpeed;
 
-	// Referências para a Mecânica de Foto
+	// Referências para o RayCast e Interface da Foto
 	private RayCast3D _cameraRay;
 	private CanvasLayer _photoUI;
 	private TextureRect _photoDisplay;
-	private ColorRect _flash;
 	private Button _btnSim;
 	private Button _btnNao;
 
@@ -25,20 +24,16 @@ public partial class Player : CharacterBody3D
 	{
 		_head = GetNode<Node3D>("Head");
 		_camera = GetNode<Camera3D>("Head/Camera3D");
-		
-		// Pegando as referências dos nós de foto
 		_cameraRay = GetNode<RayCast3D>("Head/Camera3D/RayCast3D");
+		
 		_photoUI = GetNode<CanvasLayer>("PhotoUI");
 		_photoDisplay = GetNode<TextureRect>("PhotoUI/PhotoDisplay");
-		_flash = GetNode<ColorRect>("PhotoUI/Flash");
 		_btnSim = GetNode<Button>("PhotoUI/BtnSim");
 		_btnNao = GetNode<Button>("PhotoUI/BtnNao");
 
-		// Esconde a UI de foto no início
+		// Estado inicial
 		_photoUI.Hide();
-		_flash.Hide();
-
-		// Conecta os botões da UI através do código
+		
 		_btnSim.Pressed += OnBtnSimPressed;
 		_btnNao.Pressed += OnBtnNaoPressed;
 
@@ -47,7 +42,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
-		// Se o jogo estiver pausado, ignoramos os inputs de mouse da câmera
 		if (GetTree().Paused) return;
 
 		if (@event is InputEventMouseMotion mouseMotion)
@@ -61,21 +55,28 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override async void _Process(double delta)
+	public override void _Process(double delta)
 	{
-		// Quando o jogador apertar Espaço (ui_accept por padrão) e o jogo não estiver pausado
 		if (Input.IsActionJustPressed("ui_accept") && !GetTree().Paused)
 		{
-			await TirarFoto();
+			// Verifica se o RayCast está colidindo com algo
+			if (_cameraRay.IsColliding())
+			{
+				Node colisor = (Node)_cameraRay.GetCollider();
+				// Só tira a foto se o objeto estiver no grupo "Animal"
+				if (colisor.IsInGroup("Animal"))
+				{
+					_ = TirarFoto();
+				}
+			}
 		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (GetTree().Paused) return; // Não move se o jogo estiver pausado
+		if (GetTree().Paused) return;
 
 		Vector3 velocity = Velocity;
-
 		if (!IsOnFloor())
 			velocity.Y -= gravity * (float)delta;
 
@@ -102,65 +103,31 @@ public partial class Player : CharacterBody3D
 		MoveAndSlide();
 	}
 
-	// === LÓGICA DA FOTOGRAFIA ===
-
 	private async System.Threading.Tasks.Task TirarFoto()
 	{
-		// 1. Verifica se tem um animal no centro da câmera
-		bool fotografouAnimal = false;
-		if (_cameraRay.IsColliding())
-		{
-			Node colisor = (Node)_cameraRay.GetCollider();
-			if (colisor.IsInGroup("Animal"))
-			{
-				fotografouAnimal = true;
-				GD.Print("Um animal foi fotografado!");
-			}
-		}
-
-		// Opcional: Se quiser que a tela de foto só abra SE acertar um animal,
-		// você pode colocar um "if (!fotografouAnimal) return;" aqui.
-
-		// 2. Captura a imagem atual da tela
-		// Esperamos o fim do frame de renderização para garantir uma imagem limpa
+		// 1. Pausa o jogo
+		GetTree().Paused = true;
+		
+		// 2. Captura a imagem
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		Image imagemCapturada = GetViewport().GetTexture().GetImage();
 		ImageTexture texturaFoto = ImageTexture.CreateFromImage(imagemCapturada);
-
-		// 3. Aplica a foto na UI e mostra a tela
+		
+		// 3. Exibe a interface com a foto
 		_photoDisplay.Texture = texturaFoto;
-		_photoUI.Show();
+		_photoUI.Show(); 
 
-		// 4. Efeito de Flash
-		_flash.Show();
-		_flash.Modulate = new Color(1, 1, 1, 1); // Branco sólido
-		Tween tween = GetTree().CreateTween();
-		// Desvanece o alpha do flash para 0 em 0.5 segundos
-		tween.TweenProperty(_flash, "modulate:a", 0.0f, 0.5f); 
-
-		// 5. Pausa o jogo e libera o mouse para clicar nos botões
-		GetTree().Paused = true;
+		// 4. Libera o mouse para a pergunta
 		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
 
-	// === RESPOSTAS DOS BOTÕES ===
-
-	private void OnBtnSimPressed()
-	{
-		GD.Print("Jogador respondeu: SIM, é invasor.");
-		FecharTelaDeFoto();
-	}
-
-	private void OnBtnNaoPressed()
-	{
-		GD.Print("Jogador respondeu: NÃO, não é invasor.");
-		FecharTelaDeFoto();
-	}
+	private void OnBtnSimPressed() => FecharTelaDeFoto();
+	private void OnBtnNaoPressed() => FecharTelaDeFoto();
 
 	private void FecharTelaDeFoto()
 	{
 		_photoUI.Hide();
-		GetTree().Paused = false; // Despausa o jogo
-		Input.MouseMode = Input.MouseModeEnum.Captured; // Prende o mouse novamente
+		GetTree().Paused = false;
+		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 }
