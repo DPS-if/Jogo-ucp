@@ -5,6 +5,7 @@
 [ext_resource type="ArrayMesh" uid="uid://b83inurd804ml" path="res://Modelos/Arvore 001.obj" id="3_5d3jg"]
 [ext_resource type="ArrayMesh" uid="uid://c0ktke6xr2tp2" path="res://Modelos/pedra001.obj" id="4_wan0n"]
 [ext_resource type="ArrayMesh" uid="uid://bufky4rf61kr" path="res://Modelos/pedra004.obj" id="5_auc41"]
+[ext_resource type="PackedScene" uid="uid://dj1klq2q3gbv4" path="res://Player.tscn" id="6_wan0n"]
 
 [sub_resource type="Environment" id="Environment_70f7c"]
 background_mode = 2
@@ -422,3 +423,6 @@ mesh = ExtResource("5_auc41")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17084312, -0.30010176, -0.8804784)
 visible = false
 shape = SubResource("ConcavePolygonShape3D_00yci")
+
+[node name="Player" parent="." unique_id=1319423774 instance=ExtResource("6_wan0n")]
+transform = Transform3D(0.7, 0, 0, 0, 0.69719607, 0.06259107, 0, -0.06259107, 0.69719607, -2.6748414, 1.0514725, 0)
