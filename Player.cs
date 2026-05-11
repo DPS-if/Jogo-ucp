@@ -3,51 +3,42 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	[Export] public float WalkSpeed = 5.0f;
-	[Export] public float SprintSpeed = 8.0f;
+	[Export] public float WalkSpeed = 0.8f;
+	[Export] public float SprintSpeed = 1.7f;
 	[Export] public float MouseSensitivity = 0.002f;
 
 	private Node3D _head;
 	private Camera3D _camera;
 	private float _currentSpeed;
 
-	// Referências para o RayCast e Interface da Foto
+	// Referências para a Mecânica de Foto
 	private RayCast3D _cameraRay;
 	private CanvasLayer _photoUI;
 	private TextureRect _photoDisplay;
+	private ColorRect _flash;
 	private Button _btnSim;
 	private Button _btnNao;
-
-	// Referências para o Flash Global
-	private CanvasLayer _flashUI;
-	private ColorRect _screenFlash;
 
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
 	public override void _Ready()
 	{
-		// Pega as referências dos nós. Verifique se os nomes estão corretos na sua cena!
 		_head = GetNode<Node3D>("Head");
 		_camera = GetNode<Camera3D>("Head/Camera3D");
-		_cameraRay = GetNode<RayCast3D>("Head/Camera3D/RayCast3D");
 		
+		// Pegando as referências dos nós de foto
+		_cameraRay = GetNode<RayCast3D>("Head/Camera3D/RayCast3D");
 		_photoUI = GetNode<CanvasLayer>("PhotoUI");
 		_photoDisplay = GetNode<TextureRect>("PhotoUI/PhotoDisplay");
+		_flash = GetNode<ColorRect>("PhotoUI/Flash");
 		_btnSim = GetNode<Button>("PhotoUI/BtnSim");
 		_btnNao = GetNode<Button>("PhotoUI/BtnNao");
 
-		// Pega as novas referências do flash global
-		_flashUI = GetNode<CanvasLayer>("FlashLayer");
-		_screenFlash = GetNode<ColorRect>("FlashLayer/ScreenFlash");
-
-		// Estado inicial das interfaces
+		// Esconde a UI de foto no início
 		_photoUI.Hide();
-		_flashUI.Hide(); // O flash global deve começar escondido
-		
-		// Configura o flash para ser branco e sólido antes do primeiro uso
-		_screenFlash.Modulate = new Color(1, 1, 1, 1); 
+		_flash.Hide();
 
-		// Conecta os botões
+		// Conecta os botões da UI através do código
 		_btnSim.Pressed += OnBtnSimPressed;
 		_btnNao.Pressed += OnBtnNaoPressed;
 
@@ -56,6 +47,7 @@ public partial class Player : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
+		// Se o jogo estiver pausado, ignoramos os inputs de mouse da câmera
 		if (GetTree().Paused) return;
 
 		if (@event is InputEventMouseMotion mouseMotion)
@@ -69,41 +61,32 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override void _Process(double delta)
+	public override async void _Process(double delta)
 	{
-		// Quando o jogador apertar Espaço (ui_accept) e o jogo não estiver pausado
+		// Quando o jogador apertar Espaço (ui_accept por padrão) e o jogo não estiver pausado
 		if (Input.IsActionJustPressed("ui_accept") && !GetTree().Paused)
 		{
-			// CORREÇÃO: Primeiro, verifica se tem um animal no foco do RayCast
-			if (_cameraRay.IsColliding())
-			{
-				Node colisor = (Node)_cameraRay.GetCollider();
-				if (colisor.IsInGroup("Animal"))
-				{
-					GD.Print("Um animal foi detectado. Preparando para tirar a foto!");
-					// Chamar TirarFoto como async para evitar avisos
-					_ = TirarFoto();
-					return; // Para aqui, a foto foi iniciada
-				}
-			}
-			// Se o código chegou aqui, é porque não havia animal no foco
-			GD.Print("Não havia nenhum animal no foco do RayCast. Foto não realizada.");
+			await TirarFoto();
 		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (GetTree().Paused) return;
+		if (GetTree().Paused) return; // Não move se o jogo estiver pausado
 
 		Vector3 velocity = Velocity;
+
 		if (!IsOnFloor())
 			velocity.Y -= gravity * (float)delta;
+
 		if (Input.IsActionPressed("ui_sprint") || Input.IsKeyPressed(Key.Shift))
 			_currentSpeed = SprintSpeed;
 		else
 			_currentSpeed = WalkSpeed;
+
 		Vector2 inputDir = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		
 		if (direction != Vector3.Zero)
 		{
 			velocity.X = direction.X * _currentSpeed;
@@ -114,44 +97,53 @@ public partial class Player : CharacterBody3D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, _currentSpeed);
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, _currentSpeed);
 		}
+
 		Velocity = velocity;
 		MoveAndSlide();
 	}
 
-	// === NOVA LÓGICA DA FOTOGRAFIA ===
+	// === LÓGICA DA FOTOGRAFIA ===
 
 	private async System.Threading.Tasks.Task TirarFoto()
 	{
-		// 1. Pausa o jogo imediatamente para congelar a cena
-		GetTree().Paused = true;
-		
-		// 2. Espera o final do frame de renderização para capturar a imagem limpa
+		// 1. Verifica se tem um animal no centro da câmera
+		bool fotografouAnimal = false;
+		if (_cameraRay.IsColliding())
+		{
+			Node colisor = (Node)_cameraRay.GetCollider();
+			if (colisor.IsInGroup("Animal"))
+			{
+				fotografouAnimal = true;
+				GD.Print("Um animal foi fotografado!");
+			}
+		}
+
+		// Opcional: Se quiser que a tela de foto só abra SE acertar um animal,
+		// você pode colocar um "if (!fotografouAnimal) return;" aqui.
+
+		// 2. Captura a imagem atual da tela
+		// Esperamos o fim do frame de renderização para garantir uma imagem limpa
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		Image imagemCapturada = GetViewport().GetTexture().GetImage();
 		ImageTexture texturaFoto = ImageTexture.CreateFromImage(imagemCapturada);
-		
-		// 3. Aplica a foto na interface de usuário (PhotoUI)
+
+		// 3. Aplica a foto na UI e mostra a tela
 		_photoDisplay.Texture = texturaFoto;
-		
-		// 4. CORREÇÃO: Mostra o flash global e a PhotoUI com a foto
-		// Garantimos que o flash esteja branco e sólido antes de mostrá-lo
-		_screenFlash.Modulate = new Color(1, 1, 1, 1);
-		_flashUI.Show(); // Cobre TUDO (incluindo os botões Sim/Não que ainda vamos mostrar)
-		
-		// Mostra a PhotoUI (que contém a foto e as perguntas)
-		_photoUI.Show(); 
+		_photoUI.Show();
 
-		// 5. Cria um Tween para fazer o flash sumir (fades out)
+		// 4. Efeito de Flash
+		_flash.Show();
+		_flash.Modulate = new Color(1, 1, 1, 1); // Branco sólido
 		Tween tween = GetTree().CreateTween();
-		// Diminui o alpha (opacidade) do flash para 0 em 0.4 segundos (um flash rápido)
-		tween.TweenProperty(_screenFlash, "modulate:a", 0.0f, 0.4f); 
-		// Quando o flash sumir completamente, escondemos o CanvasLayer do flash
-		await tween.Finished;
-		_flashUI.Hide();
+		// Desvanece o alpha do flash para 0 em 0.5 segundos
+		tween.TweenProperty(_flash, "modulate:a", 0.0f, 0.5f); 
 
-		// 6. Libera o mouse para interagir com a PhotoUI
+		// 5. Pausa o jogo e libera o mouse para clicar nos botões
+		GetTree().Paused = true;
 		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
+
+	// === RESPOSTAS DOS BOTÕES ===
 
 	private void OnBtnSimPressed()
 	{

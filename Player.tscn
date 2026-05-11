@@ -4,15 +4,16 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 radius = 0.12693214
-height = 0.2538643
+height = 0.3811009
 
 [node name="Player" type="Node3D" unique_id=1319423774]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=29193798]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016897358, 0.083453245, -0.0064419694)
 script = ExtResource("1_4flbx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=720834342]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043377683, -0.06762163, 0.102224946)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043377683, -0.0040033236, 0.102224946)
 shape = SubResource("CapsuleShape3D_4flbx")
 
 [node name="Head" type="Node3D" parent="CharacterBody3D" unique_id=2013477234]
@@ -36,6 +37,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Flash" type="ColorRect" parent="CharacterBody3D/PhotoUI" unique_id=33644578]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="CharacterBody3D/PhotoUI" unique_id=1068646428]
 anchors_preset = 8
@@ -74,15 +84,3 @@ offset_bottom = -155.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "NÂO"
-
-[node name="FlashLayer" type="CanvasLayer" parent="CharacterBody3D/PhotoUI" unique_id=427481157]
-process_mode = 3
-layer = 100
-
-[node name="ColorRect" type="ColorRect" parent="CharacterBody3D/PhotoUI/FlashLayer" unique_id=2065008252]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
