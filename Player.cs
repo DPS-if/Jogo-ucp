@@ -11,12 +11,17 @@ public partial class Player : CharacterBody3D
 	private Camera3D _camera;
 	private float _currentSpeed;
 
-	// Referências para o RayCast e Interface da Foto
+	// Referências da Interface
 	private RayCast3D _cameraRay;
 	private CanvasLayer _photoUI;
 	private TextureRect _photoDisplay;
 	private Button _btnSim;
 	private Button _btnNao;
+	private Label _scoreLabel;
+
+	// === NOVAS VARIÁVEIS DO SISTEMA DE PONTOS E VALIDAÇÃO ===
+	private int _especiesFotografadas = 0;
+	private Animal _animalFocado; // Guarda o script do animal que está sendo fotografado agora
 
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
@@ -30,8 +35,11 @@ public partial class Player : CharacterBody3D
 		_photoDisplay = GetNode<TextureRect>("PhotoUI/PhotoDisplay");
 		_btnSim = GetNode<Button>("PhotoUI/BtnSim");
 		_btnNao = GetNode<Button>("PhotoUI/BtnNao");
+		_scoreLabel = GetNode<Label>("HUD/ScoreLabel");
+		
+		// Inicializa o texto
+		AtualizarTextoHUD();
 
-		// Estado inicial
 		_photoUI.Hide();
 		
 		_btnSim.Pressed += OnBtnSimPressed;
@@ -59,13 +67,15 @@ public partial class Player : CharacterBody3D
 	{
 		if (Input.IsActionJustPressed("ui_accept") && !GetTree().Paused)
 		{
-			// Verifica se o RayCast está colidindo com algo
 			if (_cameraRay.IsColliding())
 			{
 				Node colisor = (Node)_cameraRay.GetCollider();
-				// Só tira a foto se o objeto estiver no grupo "Animal"
-				if (colisor.IsInGroup("Animal"))
+				
+				// NOVO: Em vez de verificar apenas o grupo, verificamos se o colisor
+				// (ou o pai do colisor) possui o script "Animal" anexado.
+				if (colisor is Animal animalDetectado)
 				{
+					_animalFocado = animalDetectado; // Salva o animal para usarmos nos botões
 					_ = TirarFoto();
 				}
 			}
@@ -105,24 +115,71 @@ public partial class Player : CharacterBody3D
 
 	private async System.Threading.Tasks.Task TirarFoto()
 	{
-		// 1. Pausa o jogo
 		GetTree().Paused = true;
 		
-		// 2. Captura a imagem
 		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		Image imagemCapturada = GetViewport().GetTexture().GetImage();
 		ImageTexture texturaFoto = ImageTexture.CreateFromImage(imagemCapturada);
 		
-		// 3. Exibe a interface com a foto
 		_photoDisplay.Texture = texturaFoto;
 		_photoUI.Show(); 
 
-		// 4. Libera o mouse para a pergunta
 		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
 
-	private void OnBtnSimPressed() => FecharTelaDeFoto();
-	private void OnBtnNaoPressed() => FecharTelaDeFoto();
+	// === LÓGICA DE VALIDAÇÃO DAS RESPOSTAS ===
+
+	private void OnBtnSimPressed()
+	{
+		// O jogador respondeu que SIM, É INVASOR.
+		// Isso significa que para ele acertar, o animal NÃO pode ser nativo (IsNativo = false).
+		if (_animalFocado != null && _animalFocado.IsNativo == false)
+		{
+			Acertou();
+		}
+		else
+		{
+			Errou();
+		}
+	}
+
+	private void OnBtnNaoPressed()
+	{
+		// O jogador respondeu que NÃO É INVASOR.
+		// Isso significa que para ele acertar, o animal DEVE ser nativo (IsNativo = true).
+		if (_animalFocado != null && _animalFocado.IsNativo == true)
+		{
+			Acertou();
+		}
+		else
+		{
+			Errou();
+		}
+	}
+
+	private void AtualizarTextoHUD()
+	{
+		_scoreLabel.Text = $"Espécies: " + _especiesFotografadas + "/6";
+	}
+	
+	private void Acertou()
+	{
+		if(_especiesFotografadas < 6)
+		{
+			_especiesFotografadas++;
+		}
+		GD.Print($"Correto! Espécies fotografadas: {_especiesFotografadas}");
+		FecharTelaDeFoto();
+		AtualizarTextoHUD();
+	}
+
+	private void Errou()
+	{
+		GD.Print("Resposta Errada! Reiniciando o jogo...");
+		// Despausar é essencial antes de recarregar a cena, senão o jogo volta congelado!
+		GetTree().Paused = false; 
+		GetTree().ReloadCurrentScene();
+	}
 
 	private void FecharTelaDeFoto()
 	{

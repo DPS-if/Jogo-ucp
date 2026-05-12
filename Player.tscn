@@ -25,7 +25,15 @@ current = true
 fov = 54.81397
 
 [node name="RayCast3D" type="RayCast3D" parent="CharacterBody3D/Head/Camera3D" unique_id=1792671754]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 target_position = Vector3(0, 0, -10)
+
+[node name="HUD" type="CanvasLayer" parent="CharacterBody3D" unique_id=135424576]
+
+[node name="ScoreLabel" type="Label" parent="CharacterBody3D/HUD" unique_id=769266478]
+offset_right = 254.0
+offset_bottom = 44.0
+text = "Animais fotografados: 0/6"
 
 [node name="PhotoUI" type="CanvasLayer" parent="CharacterBody3D" unique_id=409332702]
 process_mode = 3
@@ -66,9 +74,9 @@ text = "Este animal é invasor?"
 
 [node name="BtnSim" type="Button" parent="CharacterBody3D/PhotoUI" unique_id=1189014632]
 offset_left = 379.0
-offset_top = 436.0
+offset_top = 432.0
 offset_right = 473.0
-offset_bottom = 493.0
+offset_bottom = 489.0
 text = "SIM"
 
 [node name="BtnNao" type="Button" parent="CharacterBody3D/PhotoUI" unique_id=41323975]
