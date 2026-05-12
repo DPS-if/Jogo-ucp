@@ -1,0 +1,143 @@
+[gd_scene format=3 uid="uid://mgxpy46unqif"]
+
+[ext_resource type="Texture2D" uid="uid://o8amjeypgmm" path="res://assets/diego.jpg" id="1_62e2m"]
+[ext_resource type="Script" uid="uid://chv7lsv4ypquv" path="res://MenuPrincipal.cs" id="1_qtu10"]
+[ext_resource type="Texture2D" uid="uid://dbfb6jl1r83w8" path="res://assets/caio.png" id="2_qtu10"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ee4bf"]
+font_size = 61
+
+[sub_resource type="LabelSettings" id="LabelSettings_kbped"]
+font_size = 28
+
+[node name="Control" type="Control" unique_id=1464988216]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qtu10")
+
+[node name="PainelSplash" type="Control" parent="." unique_id=281870443]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="PainelSplash" unique_id=1606169213]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 646.0
+color = Color(0.49, 0.49, 0.49, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="PainelSplash" unique_id=320600585]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 9.0
+offset_right = 482.0
+offset_bottom = 178.0
+color = Color(0.32, 0.32, 0.32, 1)
+
+[node name="TextureRect" type="TextureRect" parent="PainelSplash" unique_id=1714214981]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 17.0
+offset_right = 293.0
+offset_bottom = 168.0
+texture = ExtResource("1_62e2m")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="PainelSplash" unique_id=2088830752]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 17.0
+offset_right = 471.0
+offset_bottom = 168.0
+texture = ExtResource("2_qtu10")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="PainelSplash" unique_id=1391613147]
+layout_mode = 0
+offset_left = 581.0
+offset_top = 52.0
+offset_right = 1038.0
+offset_bottom = 154.0
+text = "THE biologist "
+label_settings = SubResource("LabelSettings_ee4bf")
+uppercase = true
+
+[node name="ColorRect3" type="ColorRect" parent="PainelSplash" unique_id=1399168758]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 199.0
+offset_right = 1179.0
+offset_bottom = 678.0
+color = Color(0.32, 0.32, 0.32, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PainelSplash" unique_id=1786871163]
+layout_mode = 0
+offset_left = 179.0
+offset_top = 273.0
+offset_right = 979.0
+offset_bottom = 459.0
+
+[node name="jogar" type="Button" parent="PainelSplash/VBoxContainer" unique_id=1544119102]
+layout_mode = 2
+text = "Jogar"
+
+[node name="ComoJogar" type="Button" parent="PainelSplash/VBoxContainer" unique_id=386406070]
+layout_mode = 2
+text = "Como Jogar"
+
+[node name="Sair" type="Button" parent="PainelSplash/VBoxContainer" unique_id=1412652747]
+layout_mode = 2
+text = "Sair"
+
+[node name="ComoJogar" type="Control" parent="." unique_id=1095466211]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="ComoJogar" unique_id=117803896]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 646.0
+color = Color(0.49, 0.49, 0.49, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="ComoJogar" unique_id=1551910473]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 9.0
+offset_right = 1140.0
+offset_bottom = 635.0
+color = Color(0.32, 0.32, 0.32, 1)
+
+[node name="Label" type="Label" parent="ComoJogar" unique_id=645351119]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 25.0
+offset_right = 1167.0
+offset_bottom = 680.0
+text = "1) Explore o mapa — mova-se pelo cenário da savana
+ usando W A S D e o mouse para olhar ao redor.
+
+2) Encontre os animais — localize os animais espalhados
+ pelo mapa e aponte a câmera para eles.
+
+3) Tire uma foto — pressione Espaço para fotografar o 
+animal quando ele estiver no centro da mira.
+
+4) Responda a pergunta — o animal é nativo da savana?
+ Clique Sim ou Não para registrar sua resposta.
+
+5) Complete o desafio — encontre e fotografe todos os
+ animais com o máximo de acertos para vencer!"
+label_settings = SubResource("LabelSettings_kbped")
+
+[node name="voltar" type="Button" parent="ComoJogar" unique_id=967452971]
+layout_mode = 0
+offset_left = 833.0
+offset_top = 545.0
+offset_right = 1105.0
+offset_bottom = 608.0
+text = "Voltar"
