@@ -48,10 +48,10 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kpjcp"]
 shader = SubResource("Shader_xhfnw")
-shader_parameter/chromatic_aberration_amount = 0.003
-shader_parameter/scanline_count = 250.0
-shader_parameter/scanline_intensity = 0.05
-shader_parameter/noise_intensity = 0.08
+shader_parameter/chromatic_aberration_amount = 0.0030000001425
+shader_parameter/scanline_count = 271.978012918955
+shader_parameter/scanline_intensity = 0.2250000106875
+shader_parameter/noise_intensity = 0.11200000532
 
 [node name="Player" type="Node3D" unique_id=1319423774]
 
