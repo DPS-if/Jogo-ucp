@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://c43mveix8pctg" path="res://Player.cs" id="1_4flbx"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
-radius = 0.12693214
-height = 0.3811009
+radius = 0.15771484
+height = 0.46881038
 
 [node name="Player" type="Node3D" unique_id=1319423774]
 
@@ -13,7 +13,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016897358, 0.083453245, -
 script = ExtResource("1_4flbx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=720834342]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043377683, -0.0040033236, 0.102224946)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.043377683, 0.03985142, 0.102224946)
 shape = SubResource("CapsuleShape3D_4flbx")
 
 [node name="Head" type="Node3D" parent="CharacterBody3D" unique_id=2013477234]
