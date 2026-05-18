@@ -10,9 +10,9 @@ public partial class Player : CharacterBody3D
 	[Export] public float MouseSensitivity = 0.002f;
 
 	[ExportGroup("Camera Movement (Juice)")]
-	[Export] public float BobFreq = 5.0f; // Frequência do passo
-	[Export] public float BobAmp = 0.05f; // Amplitude (altura do balanço)
-	[Export] public float HandShakeIntensity = 0.05f; // Tremor da mão
+	[Export] public float BobFreq = 5.0f; 
+	[Export] public float BobAmp = 0.05f; 
+	[Export] public float HandShakeIntensity = 0.05f; 
 
 	private Node3D _head;
 	private Camera3D _camera;
@@ -29,6 +29,14 @@ public partial class Player : CharacterBody3D
 	private Button _btnSim, _btnNao;
 	private Label _scoreLabel;
 	
+	// Referências para a Tela de Morte
+	private CanvasLayer _deathUI;
+	private Button _btnRecomecar;
+
+	// === NOVAS REFERÊNCIAS PARA A TELA DE VITÓRIA ===
+	private CanvasLayer _victoryUI;
+	private Button _btnSair;
+
 	private int _especiesFotografadas = 0;
 	private Animal _animalFocado;
 
@@ -36,7 +44,6 @@ public partial class Player : CharacterBody3D
 
 	public override void _Ready()
 	{
-		// Captura de nós com verificação de segurança
 		_head = GetNode<Node3D>("Head");
 		_camera = GetNode<Camera3D>("Head/Camera3D");
 		_cameraRay = GetNode<RayCast3D>("Head/Camera3D/RayCast3D");
@@ -46,14 +53,27 @@ public partial class Player : CharacterBody3D
 		_btnNao = GetNode<Button>("PhotoUI/BtnNao");
 		_scoreLabel = GetNode<Label>("HUD/ScoreLabel");
 
-		// Configuração do Ruído (Handheld)
+		_deathUI = GetNode<CanvasLayer>("DeathUI");
+		_btnRecomecar = GetNode<Button>("DeathUI/BtnRecomecar");
+
+		// === CAPTURA OS NÓS DA VITÓRIA ===
+		_victoryUI = GetNode<CanvasLayer>("VictoryUI");
+		_btnSair = GetNode<Button>("VictoryUI/BtnSair");
+
 		_noise.Seed = (int)GD.Randi();
 		_noise.Frequency = 0.5f;
 		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
 
+		// Esconde as telas no início
 		_photoUI.Hide();
+		_deathUI.Hide();
+		_victoryUI.Hide(); // Garante que a tela de vitória comece escondida
+		
+		// Conexões
 		_btnSim.Pressed += OnBtnSimPressed;
 		_btnNao.Pressed += OnBtnNaoPressed;
+		_btnRecomecar.Pressed += OnBtnRecomecarPressed;
+		_btnSair.Pressed += OnBtnSairPressed; // Conecta o botão de sair da vitória
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		AtualizarTextoHUD();
@@ -65,10 +85,7 @@ public partial class Player : CharacterBody3D
 
 		if (@event is InputEventMouseMotion mouseMotion)
 		{
-			// Rotação horizontal (Corpo)
 			RotateY(-mouseMotion.Relative.X * MouseSensitivity);
-			
-			// Rotação vertical (Cabeça/Head)
 			Vector3 headRot = _head.Rotation;
 			headRot.X -= mouseMotion.Relative.Y * MouseSensitivity;
 			headRot.X = Mathf.Clamp(headRot.X, Mathf.DegToRad(-85), Mathf.DegToRad(85));
@@ -82,7 +99,7 @@ public partial class Player : CharacterBody3D
 
 		HandleCameraEffects((float)delta);
 
-		if (Input.IsActionJustPressed("ui_accept")) // Geralmente Barra de Espaço ou Enter
+		if (Input.IsActionJustPressed("ui_accept"))
 		{
 			CheckPhotoCapture();
 		}
@@ -94,7 +111,6 @@ public partial class Player : CharacterBody3D
 		Vector2 horizontalVel = new Vector2(Velocity.X, Velocity.Z);
 		float speedFraction = horizontalVel.Length() / SprintSpeed;
 
-		// --- 1. HEAD BOB (Balanço ao caminhar) ---
 		Vector3 targetPos = Vector3.Zero;
 		if (IsOnFloor() && horizontalVel.Length() > 0.1f)
 		{
@@ -104,19 +120,15 @@ public partial class Player : CharacterBody3D
 		}
 		else
 		{
-			_bobCycle = 0; // Reseta o ciclo quando parado
+			_bobCycle = 0;
 		}
 
-		// --- 2. HANDHELD SHAKE (Ruído de mão trêmula) ---
-		// Aumenta o tremor se estiver correndo
 		float currentShake = HandShakeIntensity * (1.0f + speedFraction);
 		targetPos.X += _noise.GetNoise2D(_noiseTime, 0) * currentShake;
 		targetPos.Y += _noise.GetNoise2D(0, _noiseTime) * currentShake;
 
-		// Aplica a posição suavemente na CÂMERA (não no Head)
 		_camera.Position = _camera.Position.Lerp(targetPos, delta * 10.0f);
 
-		// --- 3. TILT (Inclinação lateral) ---
 		float tilt = _noise.GetNoise2D(_noiseTime * 0.5f, _noiseTime * 0.5f) * currentShake * 2.0f;
 		Vector3 camRot = _camera.Rotation;
 		camRot.Z = Mathf.LerpAngle(camRot.Z, Mathf.DegToRad(tilt), delta * 5.0f);
@@ -175,17 +187,69 @@ public partial class Player : CharacterBody3D
 		Input.MouseMode = Input.MouseModeEnum.Visible;
 	}
 
-	// --- LOGICA DE BOTÕES E PONTUAÇÃO (IGUAL AO SEU ORIGINAL) ---
 	private void OnBtnSimPressed() { if (_animalFocado != null && !_animalFocado.IsNativo) Acertou(); else Errou(); }
 	private void OnBtnNaoPressed() { if (_animalFocado != null && _animalFocado.IsNativo) Acertou(); else Errou(); }
 	
-	private void Acertou() { 
+	private void Acertou() 
+	{ 
 		_especiesFotografadas = Mathf.Min(_especiesFotografadas + 1, 6);
 		AtualizarTextoHUD(); 
 		FecharTelaDeFoto(); 
+
+		// === VERIFICA SE O JOGADOR GANHOU APÓS ACERTAR ===
+		if (_especiesFotografadas >= 6)
+		{
+			Venceu();
+		}
 	}
 	
-	private void Errou() { GetTree().Paused = false; GetTree().ReloadCurrentScene(); }
-	private void FecharTelaDeFoto() { _photoUI.Hide(); GetTree().Paused = false; Input.MouseMode = Input.MouseModeEnum.Captured; }
-	private void AtualizarTextoHUD() { _scoreLabel.Text = $"Espécies: {_especiesFotografadas}/6"; }
+	// === LÓGICA DA TELA DE VITÓRIA ===
+	private void Venceu()
+	{
+		GD.Print("Jogador venceu! Abrindo tela de vitória...");
+		_victoryUI.Show(); // Mostra a interface de vitória
+		
+		// Pausa o jogo e libera o mouse
+		GetTree().Paused = true;
+		Input.MouseMode = Input.MouseModeEnum.Visible;
+	}
+
+	// === FUNÇÃO DO BOTÃO SAIR (REDIRECIONA PARA O MENU) ===
+	private void OnBtnSairPressed()
+	{
+		GD.Print("Botão Sair pressionado. Retornando ao menu...");
+		GetTree().Paused = false; // Despausa antes de mudar de cena
+		
+		// Muda para a cena do menu principal ("control.tscn" que está na pasta raiz "res://")
+		GetTree().ChangeSceneToFile("res://control.tscn");
+	}
+
+	private void Errou() 
+	{ 
+		GD.Print("Resposta Errada! Abrindo tela de morte...");
+		_photoUI.Hide(); 
+		_deathUI.Show(); 
+		GetTree().Paused = true; 
+		Input.MouseMode = Input.MouseModeEnum.Visible;
+	}
+
+	private void OnBtnRecomecarPressed()
+	{
+		GD.Print("Botão Recomeçar pressionado. Reiniciando a cena...");
+		_deathUI.Hide();
+		GetTree().Paused = false; 
+		GetTree().ReloadCurrentScene();
+	}
+
+	private void FecharTelaDeFoto() 
+	{ 
+		_photoUI.Hide(); 
+		GetTree().Paused = false; 
+		Input.MouseMode = Input.MouseModeEnum.Captured; 
+	}
+	
+	private void AtualizarTextoHUD() 
+	{ 
+		_scoreLabel.Text = $"Espécies: {_especiesFotografadas}/6"; 
+	}
 }
