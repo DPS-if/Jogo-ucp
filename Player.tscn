@@ -6,6 +6,53 @@
 radius = 0.15771484
 height = 0.46881038
 
+[sub_resource type="Shader" id="Shader_xhfnw"]
+code = "shader_type canvas_item;
+
+// Pega a imagem que está sendo renderizada na tela
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+
+// Controles que vão aparecer no Inspector para você ajustar
+uniform float chromatic_aberration_amount : hint_range(0.0, 0.05) = 0.003;
+uniform float scanline_count : hint_range(0.0, 1000.0) = 250.0;
+uniform float scanline_intensity : hint_range(0.0, 1.0) = 0.05;
+uniform float noise_intensity : hint_range(0.0, 1.0) = 0.08;
+
+// Função para criar ruído aleatório
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+void fragment() {
+    vec2 uv = SCREEN_UV;
+
+    // 1. Aberração Cromática (Separa as cores RGB)
+    float r = texture(screen_texture, vec2(uv.x + chromatic_aberration_amount, uv.y)).r;
+    float g = texture(screen_texture, uv).g;
+    float b = texture(screen_texture, vec2(uv.x - chromatic_aberration_amount, uv.y)).b;
+
+    // 2. Scanlines (Linhas horizontais)
+    float scanline = sin(uv.y * scanline_count * 3.14159) * scanline_intensity;
+
+    // 3. Ruído (Chuvisco de fita)
+    // O TIME faz o ruído mudar a cada frame
+    float noise = rand(uv + TIME) * noise_intensity;
+
+    // Junta tudo (Cor original - linhas escuras - ruído)
+    vec3 color = vec3(r, g, b);
+    color -= scanline;
+    color -= noise;
+
+    COLOR = vec4(color, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kpjcp"]
+shader = SubResource("Shader_xhfnw")
+shader_parameter/chromatic_aberration_amount = 0.003
+shader_parameter/scanline_count = 250.0
+shader_parameter/scanline_intensity = 0.05
+shader_parameter/noise_intensity = 0.08
+
 [node name="Player" type="Node3D" unique_id=1319423774]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=29193798]
@@ -47,14 +94,6 @@ grow_vertical = 2
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Flash" type="ColorRect" parent="CharacterBody3D/PhotoUI" unique_id=33644578]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
 [node name="Label" type="Label" parent="CharacterBody3D/PhotoUI" unique_id=1068646428]
 anchors_preset = 8
 anchor_left = 0.5
@@ -92,3 +131,14 @@ offset_bottom = -155.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "NÂO"
+
+[node name="VHSEffect" type="CanvasLayer" parent="CharacterBody3D" unique_id=1651599738]
+
+[node name="ColorRect" type="ColorRect" parent="CharacterBody3D/VHSEffect" unique_id=600343219]
+material = SubResource("ShaderMaterial_kpjcp")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
